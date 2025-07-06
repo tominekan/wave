@@ -3,8 +3,103 @@
  * Specifically, setting the audtho
  */
 #include <iostream>
+#include <unordered_map>
+#include <vector>
+#include <string>
+#include <stdexcept>
 
-int main() {
-    std::cout << "Lebron james";
+/**
+ * Returns an unordered map representing command line arguments.
+ * `inputs` is a hash map formatted like so: Keys are the names of the command line flags,
+ * and the value of the keys represents the type of the flag associated with the name.
+ * There are two types we can specify, `bool` for boolean flags, and `str`, for all other flags.
+ * Boolean flags are true if they exist within argv, and `str` flags require a value right after the flag. 
+ * 
+ * For all values that are non-flags, we return them in a vector keyed to ""  (an empty string).
+ * If we have an unrecognized flag, we throw an error. 
+ * 
+ * @param argc the number of command line arguments
+ * @param argv the command in list form
+ * @param inputs the formatted input
+ */
+std::unordered_map<std::string, std::string> parseArguments(int argc, char *argv[], std::unordered_map<std::string, std::string> inputs) {
+    std::unordered_map<std::string, std::string> result;
+    std::unordered_map<std::string, std::string> flags;
+    std::string non_flags = "";
+    std::string flag_indicator = "--";
+
+    for (int i = 1; i < argc; i++) {
+        std::string current = argv[i];
+        size_t str_size = current.size();
+
+        // This means this is a command line flag
+        if ((str_size > 2) && (current.compare(0, 2, flag_indicator) == 0)) {
+            // Grab everything after "--" in the flag 
+            std::string flag_name = current.substr(2, str_size - 2);
+
+            // Should throw an error if the flag doesn't exist
+            // Might want to handle this myself (will need to handle this by myself)
+            try {
+                std::string type = inputs.at(flag_name);
+                if (type == "bool") {
+                    result.insert({flag_name, "true"});
+                } else {
+                    // This is the value of the flags described
+                    if (i != (argc - 1)) {
+                        std::string flag_value = argv[++i];
+                        result.insert({flag_name, flag_value});
+                    }
+                }
+            } catch (const std::out_of_range& e) {
+                std::cerr << "Flag \"" << current << "\" unrecognized\n";
+                exit(-1);
+            }
+        } else {
+            // It's not a flag, so ew add it to non-flags
+            non_flags += current + " ";
+        }
+    }
+
+    result.insert({"", non_flags});
+    return result;
+}
+
+/**
+ * Splits a string into a vector of items based on a delmiiter.
+ * 
+ * @param text the string we want to split up
+ * @param delim the delimiter we are splitting the string by
+ */
+std::vector<std::string> split_string(std::string text, char delim) {
+    std::vector<std::string> result;
+    std::string elem = "";
+    for (char c : text) {
+        if (c == delim) {
+            if (elem != "") {
+                result.push_back(elem);
+                elem = "";
+            }
+        } else {
+            elem += c;
+        }
+    }
+    return result;
+}
+
+int main(int argc, char *argv[]) {
+    std::unordered_map<std::string, std::string> expectedArgs = {
+        {"help", "bool"}
+    };
+    std::unordered_map<std::string, std::string> args = parseArguments(argc, argv, expectedArgs);
+    
+    for (const auto& pair : args) {
+        if (pair.first == "") {
+            std::cout << "Passed Inputs (non-flag): " << pair.second << "\n";
+        } else {
+            std::cout << "Flag: " << pair.first << ", Value: " << pair.second << "\n";
+        }
+    }
     return 0;
 }
+
+
