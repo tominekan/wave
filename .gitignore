@@ -1,5 +1,6 @@
 # VSCode folder
-.vscode
+.vscode/
+
 
 # Compiled Binary
 wave
