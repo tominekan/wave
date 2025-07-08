@@ -105,12 +105,33 @@ bool containsKey(std::unordered_map<std::string, std::string> map, std::string k
     return (map.find(key) != map.end());
 }
 
+/**
+ * Prints that we're changing a specific value
+ * @param value the name of the value we're changing
+ * @param oldv the old value
+ * @param the new value
+ */
+void printChange(std::string value, std::string oldv, std::string newv) {
+    std::cout << "Setting " << value << " : \"" << oldv << "\" -> \"" << newv << "\" \n";
+}
+
+/**
+ * Prints that we're changing a specific value
+ * @param value the name of the value we're changing
+ * @param oldv the old value
+ * @param the new value
+ */
+void printChange(std::string value, TagLib::String oldv, std::string newv) {
+    std::cout << "Setting " << value << " : \"" << oldv << "\" -> \"" << newv << "\" \n";
+}
 int main(int argc, char *argv[]) {
     // Set our expected arguments
     std::unordered_map<std::string, std::string> expectedArgs = {
         {"help", "bool"},
         {"file", "str"},
         {"set-artist", "str"},
+        {"set-title", "str"},
+        {"set-album", "str"},
         {"summarize", "bool"},
         {"verbose", "bool"},
         {"version", "bool"}
@@ -144,14 +165,48 @@ int main(int argc, char *argv[]) {
     // Now that we can guarantee that the file exists, we can move on
     try {
         TagLib::FileRef f(args.at("file").c_str());
+        TagLib::Tag* tag = f.tag();
         if (containsKey(args, "summarize")) {
-            std::cout << "Title: " << f.tag()->title() << "\n";
-            std::cout << "Artist: " << f.tag()->artist() << "\n";
-            std::cout << "Author: " << f.tag()->album() << "\n";
+            std::cout << "Title: " << tag->title() << "\n";
+            std::cout << "Artist: " << tag->artist() << "\n";
+            std::cout << "Album: " << tag->album() << "\n";
+            std::cout << "Year: " << tag->year() << "\n";
+            std::cout << "Genre: " << tag->genre() << 
         }
 
         if (containsKey(args, "set-artist")) {
-            
+            if (containsKey(args, "verbose")) {
+                printChange("Artist", tag->artist(), args.at("set-artist"));
+            }
+            tag->setArtist(args.at("set-artist"));
+        }
+
+        if (containsKey(args, "set-title")) {
+            if (containsKey(args, "verbose")) {
+                printChange("Title", tag->title(), args.at("set-title"));
+            }
+            tag->setTitle(args.at("set-title"));
+        }
+
+        if (containsKey(args, "set-album")) {
+            if (containsKey(args, "verbose")) {
+                printChange("Album", tag->album(), args.at("set-album"));
+            }
+            tag->setAlbum(args.at("set-album"));
+        }
+
+        if (containsKey(args, "set-year")) {
+            if (containsKey(args, "verbose")) {
+                printChange("Year", tag->album(), args.at("set-year"));
+            }
+            tag->setYear(args.at("set-year"));
+        }
+
+        if (containsKey(args, "set-genre")) {
+            if (containsKey(args, "verbose")) {
+                printChange("Genre", tag->album(), args.at("set-genre"));
+            }
+            tag->setGenre(args.at("set-genre"));
         }
     } catch (...) {
         std::cerr << "Something went wrong...";
@@ -160,5 +215,3 @@ int main(int argc, char *argv[]) {
     
     return 0;
 }
-
-

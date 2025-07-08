@@ -22,12 +22,13 @@ chmod +x build.sh install.sh
 ### Wave TODOs:
 - [x] Build a basic command line parser
 - [ ] Have it support editing important audio file metadata:
-    - [ ] Artists
-    - [ ] Album Title
-    - [ ] Album Cover
-    - [ ] Year
-    - [ ] Genre
+    - [x] Artist Names
+    - [x] Album Title
+    - [x] Album Cover
+    - [x] Year
+    - [x] Genre
 - [ ] Maybe in the future have it also be capable of trimming audio files.
-- [ ] Have command line parser support shorter flags (`-v` versus `--version`)
+- [ ] Develop argument parser support for shorter flags (`-v` versus `--version`)
+- [ ] Develop argument parser support for flags with multiple inputs 
 
 I think for legal reasons, I need to me mention that I use [TagLib](https://taglib.org/api/index.html), and that TagLib is distributed under LGPL and MPL licenses.
