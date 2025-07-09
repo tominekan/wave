@@ -15,14 +15,13 @@ git clone https://github.com/tominekan/wave
 cd wave
 
 # Make these executable
-chmod +x build.sh install.sh
+chmod +x install.sh
 
-# Build the project
-./build.sh
-
-# Install wave (to /usr/local/bin)
+# Build and install wave (to /usr/local/bin)
 ./install.sh
 ```
+
+**NOTE**: To install wave in a different path, go to install.sh and modify the `INSTALL_PATH` variable.
 
 ### Wave TODOs:
 - [x] Build a basic command line parser
