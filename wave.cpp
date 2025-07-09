@@ -153,7 +153,7 @@ int main(int argc, char *argv[]) {
     // Set our expected arguments
     std::unordered_map<std::string, std::string> expectedArgs = {
         {"help", "bool"},
-        {"file", "str"},
+        {"input", "str"},
         {"set-artist", "str"},
         {"set-title", "str"},
         {"set-album", "str"},
@@ -169,12 +169,23 @@ int main(int argc, char *argv[]) {
     std::unordered_map<std::string, std::string> args = parseArguments(argc, argv, expectedArgs);
 
     if (containsKey(args, "help")) {
-        std::cout << "Wave. A command line tool to help with basic audio metadata editing.\n";
+        std::cout << "OVERVIEW: Wave v1.0. A command line tool to help with basic audio metadata editing.\n\n";
+        std::cout << "USAGE: wave --input audio_file.mp3 [options]\n\n";
+        std::cout << "OPTIONS:\n";
+        std::cout << "--version      Outputs wave's current version\n";
+        std::cout << "--verbose      Prints out what wave is currently doing\n";
+        std::cout << "--summarize    Outputs a summary of the track.\n";
+        std::cout << "--set-artist   Sets the artist(s) of the track.\n";
+        std::cout << "--set-title    Sets the title of the track.\n";
+        std::cout << "--set-album    Sets the album to which the track belongs to.\n";
+        std::cout << "--set-genre    Sets the genre(s) to which the track belongs to.\n";
+        std::cout << "--set-year     Sets the year in which the track was published.\n";
+        std::cout << "--set-art      Sets the cover of the track to a specfied image path, only supports jpeg and png.\n";
         exit(0);
     }
 
     if (containsKey(args, "version")) {
-        std::cout << "Wave v0.1beta";
+        std::cout << "Wave v1.0";
         exit(0);
     }
 
