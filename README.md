@@ -21,7 +21,7 @@ chmod +x build.sh install.sh
 
 ### Wave TODOs:
 - [x] Build a basic command line parser
-- [ ] Have it support editing important audio file metadata:
+- [x] Have it support editing important audio file metadata:
     - [x] Artist Names
     - [x] Album Title
     - [x] Album Cover
