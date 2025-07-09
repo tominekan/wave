@@ -36,4 +36,4 @@ chmod +x build.sh install.sh
 - [ ] Develop argument parser support for shorter flags (`-v` versus `--version`)
 - [ ] Develop argument parser support for flags with multiple inputs 
 
-I think for legal reasons, I need to me mention that I use [TagLib](https://taglib.org/api/index.html), and that TagLib is distributed under LGPL and MPL licenses.
+I think for legal reasons, I need to mention that I use [TagLib](https://taglib.org/api/index.html), and that TagLib is distributed under LGPL and MPL licenses.
