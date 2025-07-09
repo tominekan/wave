@@ -245,7 +245,7 @@ int main(int argc, char *argv[]) {
             std::string mime_type = "image/png";
 
             // If the file is NEITHER jpeg nor png
-            if (!((imagePath.compare(length - 6, 5, jpeg) == 0) || (imagePath.compare(length - 5, 4, png) == 0))) {
+            if (!((imagePath.compare(length - 5, 5, jpeg) == 0) || (imagePath.compare(length - 4, 4, png) == 0))) {
                 std::cerr << "Image file type is unsupported: must be jpeg or png\n";
                 exit(-1);
             }
