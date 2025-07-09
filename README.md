@@ -5,9 +5,14 @@ This is a quick tool to edit audio file metadata. I'm making this to avoid needi
 
 ## Install
 I'm not too sure how I'd be able to make an install script for Windows systems, so I only know how to make this work for MacOS and Linux systems.
+This project does require TagLib as a dependency, and instructions for installing TagLib can be found [here](https://github.com/taglib/taglib/blob/master/INSTALL.md). 
 
 ```sh
-# Install TagLib
+# Download this repo
+git clone https://github.com/tominekan/wave
+
+# Go to this directory
+cd wave
 
 # Make these executable
 chmod +x build.sh install.sh
