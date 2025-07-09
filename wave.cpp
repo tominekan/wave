@@ -8,7 +8,9 @@
 #include <string>
 #include <stdexcept>
 #include <filesystem>
+#include <fstream>
 #include <taglib/fileref.h>
+#include <taglib/tbytevector.h>
 
 /**
  * Returns an unordered map representing command line arguments.
@@ -124,6 +126,29 @@ void printChange(std::string value, std::string oldv, std::string newv) {
 void printChange(std::string value, TagLib::String oldv, std::string newv) {
     std::cout << "Setting " << value << " : \"" << oldv << "\" -> \"" << newv << "\" \n";
 }
+
+
+/**
+ * Grabs an image file and turns it into a TagLib ByteVector.
+ * @param path the path to the image file
+ * @returns the byte vector representation of the file
+ */
+TagLib::ByteVector vectorFromFile(std::string path) {
+    if (std::filesystem::is_directory(path)) {
+        std::cerr << path << ": not a file";
+        exit(-1);
+    }
+    std::ifstream file (path, std::ios::binary);
+    if (!file) {
+        std::cerr << path << ": not a file";
+        exit(-1);
+    }
+
+    std::vector<char> buffer ((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    return TagLib::ByteVector (buffer.data(), buffer.size());
+}
+
+
 int main(int argc, char *argv[]) {
     // Set our expected arguments
     std::unordered_map<std::string, std::string> expectedArgs = {
@@ -132,6 +157,9 @@ int main(int argc, char *argv[]) {
         {"set-artist", "str"},
         {"set-title", "str"},
         {"set-album", "str"},
+        {"set-genre", "str"},
+        {"set-year", "str"},
+        {"set-art", "str"},
         {"summarize", "bool"},
         {"verbose", "bool"},
         {"version", "bool"}
@@ -171,7 +199,7 @@ int main(int argc, char *argv[]) {
             std::cout << "Artist: " << tag->artist() << "\n";
             std::cout << "Album: " << tag->album() << "\n";
             std::cout << "Year: " << tag->year() << "\n";
-            std::cout << "Genre: " << tag->genre() << 
+            std::cout << "Genre: " << tag->genre() << "\n";
         }
 
         if (containsKey(args, "set-artist")) {
@@ -199,7 +227,7 @@ int main(int argc, char *argv[]) {
             if (containsKey(args, "verbose")) {
                 printChange("Year", tag->album(), args.at("set-year"));
             }
-            tag->setYear(args.at("set-year"));
+            tag->setYear(std::stoi(args.at("set-year")));
         }
 
         if (containsKey(args, "set-genre")) {
@@ -208,6 +236,45 @@ int main(int argc, char *argv[]) {
             }
             tag->setGenre(args.at("set-genre"));
         }
+
+        if (containsKey(args, "set-art")) {
+            std::string imagePath = args.at("set-art");
+            size_t length = imagePath.size();
+            std::string jpeg = ".jpeg";
+            std::string png = ".png";
+            std::string mime_type = "image/png";
+
+            // If the file is NEITHER jpeg nor png
+            if (!((imagePath.compare(length - 6, 5, jpeg) == 0) || (imagePath.compare(length - 5, 4, png) == 0))) {
+                std::cerr << "Image file type is unsupported: must be jpeg or png\n";
+                exit(-1);
+            }
+
+            // Is the file a jpeg
+            if (imagePath.compare(length - 6, 5, jpeg) == 0) {
+                mime_type = "image/jpeg";
+            }
+
+            if (containsKey(args, "verbose")) {
+                std::cout << "Setting album cover to: " << args.at("set-art") << "\n";
+            }
+
+            // Create variant map describing picture type
+            TagLib::ByteVector data = vectorFromFile(imagePath);
+            TagLib::VariantMap pic_map;
+            pic_map["data"] = data;
+            pic_map["pictureType"] = "Front Cover";
+            pic_map["mimeType"] = mime_type.c_str();
+
+            // Add to list of variant maps
+            TagLib::List<TagLib::VariantMap> map_list;
+            map_list.append(pic_map);
+
+            // Set the album cover to our new cover
+            f.setComplexProperties("PICTURE", map_list);
+        }
+
+        f.save();
     } catch (...) {
         std::cerr << "Something went wrong...";
         exit(1);
