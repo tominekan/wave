@@ -21,7 +21,7 @@ chmod +x install.sh
 ./install.sh
 ```
 
-**NOTE**: To install wave in a different path, go to install.sh and modify the `INSTALL_PATH` variable.
+**NOTE**: To install wave in a different path, go to install.sh and modify the `INSTALL_PATH` variable. If you get a permission denied error, then you might want to run `sudo ./install.sh`
 
 ### Wave TODOs:
 - [x] Build a basic command line parser
