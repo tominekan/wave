@@ -190,20 +190,20 @@ int main(int argc, char *argv[]) {
     }
 
     // It's mandatory this this program exists
-    if (!containsKey(args, "file")) {
+    if (!containsKey(args, "input")) {
         std::cerr << "program needs input file.\n";
         exit(-1);
     }
     
     // Ensure that the file exists
-    if (!std::filesystem::is_regular_file(args.at("file"))) {
-        std::cerr << "file \"" << args.at("file") << "\" exists"; 
+    if (!std::filesystem::is_regular_file(args.at("input"))) {
+        std::cerr << "file \"" << args.at("input") << "\" exists"; 
         exit(-1);
     }
 
     // Now that we can guarantee that the file exists, we can move on
     try {
-        TagLib::FileRef f(args.at("file").c_str());
+        TagLib::FileRef f(args.at("input").c_str());
         TagLib::Tag* tag = f.tag();
         if (containsKey(args, "summarize")) {
             std::cout << "Title: " << tag->title() << "\n";
