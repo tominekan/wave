@@ -87,6 +87,7 @@ std::unordered_map<std::string, std::string> parseArguments(int argc, char *argv
     }
 
     result.insert({"", non_flags});
+    std::cout << "FAILURE AT RETURN STATEMENT: " << result.at("") << "\n";
     return result;
 }
 
@@ -166,73 +167,80 @@ TagLib::ByteVector vectorFromFile(std::string path) {
 
 
 int main(int argc, char *argv[]) {
-    // Set our expected arguments
-    std::unordered_map<std::string, std::string> expectedArgs = {
-        {"help", "bool"},
-        {"h", "bool"},
-        {"set-artist", "str"},
-        {"a", "str"},
-        {"set-title", "str"},
-        {"t", "str"},
-        {"set-album", "str"},
-        {"l", "str"},
-        {"set-genre", "str"},
-        {"g", "str"},
-        {"set-year", "str"},
-        {"y", "str"},
-        {"set-art", "str"},
-        {"r", "str"},
-        {"summarize", "bool"},
-        {"s", "bool"},
-        {"verbose", "bool"},
-        {"vv", "bool"},
-        {"version", "bool"},
-        {"v", "bool"}
-    };
-
-    // Parse the command line arguments
-    std::unordered_map<std::string, std::string> args = parseArguments(argc, argv, expectedArgs);
-    // Split dat bih by spaces
-    std::vector<std::string> music_files = split_string(args.at(""), ' ');
-
-    bool verbose = containsKey(args, "verbose") || containsKey(args, "vv");
-
-    if (containsKey(args, "help") || containsKey(args, "h")) {
-        std::cout << "OVERVIEW: Wave v2.0. A command line tool to help with basic audio metadata editing.\n\n";
-        std::cout << "USAGE: wave audio_file.mp3 [options]\n\n";
-        std::cout << "OPTIONS:\n";
-        std::cout << "--version    (-v)   Outputs wave's current version\n";
-        std::cout << "--verbose    (-vv)  Prints out what wave is currently doing\n";
-        std::cout << "--summarize  (-s)   Outputs a summary of the track.\n";
-        std::cout << "--set-artist (-a)   Sets the artist(s) of the track.\n";
-        std::cout << "--set-title  (-t)   Sets the title of the track.\n";
-        std::cout << "--set-album  (-l)   Sets the album to which the track belongs to.\n";
-        std::cout << "--set-genre  (-g)   Sets the genre(s) to which the track belongs to.\n";
-        std::cout << "--set-year   (-y)   Sets the year in which the track was published.\n";
-        std::cout << "--set-art    (-r)   Sets the cover of the track to a specfied image path, only supports jpeg and png.\n";
-        std::cout << "--help       (-h)   Displays this help message and exits.\n";
-        exit(0);
-    }
-
-    if (containsKey(args, "version") || containsKey(args, "v")) {
-        std::cout << "Wave v2.0";
-        exit(0);
-    }
-
-    // It's mandatory we supply an input file
-    if (music_files.size() == 0) {
-        std::cerr << "program needs input file.\n";
-        exit(-1);
-    }
-    
-    // Ensure that the file exists
-    if (!std::filesystem::is_regular_file(args.at("input"))) {
-        std::cerr << "file \"" << args.at("input") << "\" exists"; 
-        exit(-1);
-    }
-
-    // Now that we can guarantee that the file exists, we can move on
     try {
+        // Set our expected arguments
+        std::unordered_map<std::string, std::string> expectedArgs = {
+            {"help", "bool"},
+            {"h", "bool"},
+            {"set-artist", "str"},
+            {"a", "str"},
+            {"set-title", "str"},
+            {"t", "str"},
+            {"set-album", "str"},
+            {"l", "str"},
+            {"set-genre", "str"},
+            {"g", "str"},
+            {"set-year", "str"},
+            {"y", "str"},
+            {"set-art", "str"},
+            {"r", "str"},
+            {"summarize", "bool"},
+            {"s", "bool"},
+            {"verbose", "bool"},
+            {"vv", "bool"},
+            {"version", "bool"},
+            {"v", "bool"}
+        };
+        // Parse the command line arguments
+        std::unordered_map<std::string, std::string> args = parseArguments(argc, argv, expectedArgs);
+
+        std::cout << "FAILURE LINE 195\n";
+        std::cout << "Unorderd Args: " << args.at("");
+
+
+
+
+        // Split dat bih by spaces
+        std::vector<std::string> music_files = split_string(args.at(""), ' ');
+
+        bool verbose = containsKey(args, "verbose") || containsKey(args, "vv");
+
+        if (containsKey(args, "help") || containsKey(args, "h")) {
+            std::cout << "OVERVIEW: Wave v2.0. A command line tool to help with basic audio metadata editing.\n\n";
+            std::cout << "USAGE: wave audio_file.mp3 [options]\n\n";
+            std::cout << "OPTIONS:\n";
+            std::cout << "--version    (-v)   Outputs wave's current version\n";
+            std::cout << "--verbose    (-vv)  Prints out what wave is currently doing\n";
+            std::cout << "--summarize  (-s)   Outputs a summary of the track.\n";
+            std::cout << "--set-artist (-a)   Sets the artist(s) of the track.\n";
+            std::cout << "--set-title  (-t)   Sets the title of the track.\n";
+            std::cout << "--set-album  (-l)   Sets the album to which the track belongs to.\n";
+            std::cout << "--set-genre  (-g)   Sets the genre(s) to which the track belongs to.\n";
+            std::cout << "--set-year   (-y)   Sets the year in which the track was published.\n";
+            std::cout << "--set-art    (-r)   Sets the cover of the track to a specfied image path, only supports jpeg and png.\n";
+            std::cout << "--help       (-h)   Displays this help message and exits.\n";
+            exit(0);
+        }
+
+        if (containsKey(args, "version") || containsKey(args, "v")) {
+            std::cout << "Wave v2.0";
+            exit(0);
+        }
+
+        // It's mandatory we supply an input file
+        if (music_files.size() == 0) {
+            std::cerr << "program needs input file.\n";
+            exit(-1);
+        }
+        
+        // Ensure that the file exists
+        if (!std::filesystem::is_regular_file(args.at("input"))) {
+            std::cerr << "file \"" << args.at("input") << "\" exists"; 
+            exit(-1);
+        }
+
+        // Now that we can guarantee that the file exists, we can move on
+
         for (std::string file : music_files) {
             TagLib::FileRef f(file.c_str());
             TagLib::Tag* tag = f.tag();
