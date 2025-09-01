@@ -33,9 +33,9 @@ chmod +x install.sh
     - [x] Year
     - [x] Genre
 - [ ] Maybe in the future have it also be capable of trimming audio files.
-- [ ] Develop argument parser support for shorter flags (`-v` versus `--version`)
-- [ ] Support batch operations for files (using glob and stuff)
+- [x] Develop argument parser support for shorter flags (`-v` versus `--version`)
+- [x] Support operations for multiple files
+    - [ ] Glob support
 - [ ] Loudness normalization????????????????????
-- [ ] Develop argument parser support for flags with multiple inputs 
 
 I think for legal reasons, I need to mention that I use [TagLib](https://taglib.org/api/index.html), and that TagLib is distributed under LGPL and MPL licenses.
