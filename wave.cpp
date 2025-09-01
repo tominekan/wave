@@ -75,7 +75,7 @@ std::unordered_map<std::string, std::string> parseArguments(int argc, char *argv
 }
 
 /**
- * Splits a string into a vector of items based on a delmiiter.
+ * Splits a string into a vector of items based on a delimiter.
  * 
  * @param text the string we want to split up
  * @param delim the delimiter we are splitting the string by
