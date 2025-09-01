@@ -87,7 +87,6 @@ std::unordered_map<std::string, std::string> parseArguments(int argc, char *argv
     }
 
     result.insert({"", non_flags});
-    std::cout << "FAILURE AT RETURN STATEMENT: " << result.at("") << "\n";
     return result;
 }
 
@@ -194,12 +193,6 @@ int main(int argc, char *argv[]) {
         // Parse the command line arguments
         std::unordered_map<std::string, std::string> args = parseArguments(argc, argv, expectedArgs);
 
-        std::cout << "FAILURE LINE 195\n";
-        std::cout << "Unorderd Args: " << args.at("");
-
-
-
-
         // Split dat bih by spaces
         std::vector<std::string> music_files = split_string(args.at(""), ' ');
 
@@ -232,16 +225,14 @@ int main(int argc, char *argv[]) {
             std::cerr << "program needs input file.\n";
             exit(-1);
         }
-        
-        // Ensure that the file exists
-        if (!std::filesystem::is_regular_file(args.at("input"))) {
-            std::cerr << "file \"" << args.at("input") << "\" exists"; 
-            exit(-1);
-        }
-
-        // Now that we can guarantee that the file exists, we can move on
 
         for (std::string file : music_files) {
+            // Ensure each file exists
+            if (!std::filesystem::is_regular_file(file)) {
+                std::cerr << "file \"" << file << "\" exists"; 
+                exit(-1);
+            }
+
             TagLib::FileRef f(file.c_str());
             TagLib::Tag* tag = f.tag();
             if (containsKey(args, "summarize") || containsKey(args, "s")) {
@@ -375,7 +366,7 @@ int main(int argc, char *argv[]) {
 
         }
     } catch (...) {
-        std::cerr << "Something went wrong...";
+        std::cerr << "\nSomething went wrong...\n";
         exit(1);
     }
     
