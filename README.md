@@ -6,6 +6,7 @@ This is a quick tool to edit audio file metadata. I'm making this to avoid needi
 ## Install
 I'm not too sure how I'd be able to make an install script for Windows systems, so I only know how to make this work for MacOS and Linux systems.
 This project does require TagLib as a dependency, and instructions for installing TagLib can be found [here](https://github.com/taglib/taglib/blob/master/INSTALL.md). 
+Also, this project needs `C++17` or greater to be available in your system, otherwise it's won't compile because we use `std::filesystem`.
 
 ```sh
 # Download this repo
@@ -33,6 +34,7 @@ chmod +x install.sh
     - [x] Genre
 - [ ] Maybe in the future have it also be capable of trimming audio files.
 - [ ] Develop argument parser support for shorter flags (`-v` versus `--version`)
+- [ ] Support batch operations for files (using glob and stuff)
 - [ ] Develop argument parser support for flags with multiple inputs 
 
 I think for legal reasons, I need to mention that I use [TagLib](https://taglib.org/api/index.html), and that TagLib is distributed under LGPL and MPL licenses.

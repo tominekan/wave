@@ -31,32 +31,48 @@ std::unordered_map<std::string, std::string> parseArguments(int argc, char *argv
     std::unordered_map<std::string, std::string> result;
     std::unordered_map<std::string, std::string> flags;
     std::string non_flags = "";
-    std::string flag_indicator = "--";
+    std::string flag_indicator = "-";
 
     for (int i = 1; i < argc; i++) {
         std::string current = argv[i];
         size_t str_size = current.size();
 
-        // This means this is a command line flag
-        if ((str_size > 2) && (current.compare(0, 2, flag_indicator) == 0)) {
-            // Grab everything after "--" in the flag 
-            std::string flag_name = current.substr(2, str_size - 2);
-
-            // Should throw an error if the flag doesn't exist
-            // Might want to handle this myself (will need to handle this by myself)
+        // This means this some sort of command line flag
+        if ((str_size >= 2) && (current.compare(0, 1, flag_indicator) == 0)) {
             try {
-                std::string type = inputs.at(flag_name);
-                if (type == "bool") {
-                    result.insert({flag_name, "true"});
-                } else {
-                    // This is the value of the flags described
-                    if (i != (argc - 1)) {
-                        std::string flag_value = argv[++i];
-                        result.insert({flag_name, flag_value});
+                // Long command line flag
+                if (current.compare(0, 2, flag_indicator) == 0) {
+                    std::string flag_name = current.substr(2, str_size - 2);
+                    std::string type = inputs.at(flag_name);
+
+                    if (type == "bool") {
+                        result.insert({flag_name, "true"});
                     } else {
-                        throw std::invalid_argument("");
+                        if (i != (argc - 1)) {
+                            std::string flag_value = argv[++i];
+                            result.insert({flag_name, flag_value});
+                        } else {
+                            // Flag is last in set of arguments
+                            throw std::invalid_argument("");
+                        }
+                    }
+                } else {
+                    std::string flag_name = current.substr(1, str_size - 1);
+                    std::string type = inputs.at(flag_name);
+
+                    if (type == "bool") {
+                        result.insert({flag_name, "true"});
+                    } else {
+                        if (i != (argc - 1)) {
+                            std::string flag_value = argv[++i];
+                            result.insert({flag_name, flag_value});
+                        } else {
+                            // Flag is last in set of arguments
+                            throw std::invalid_argument("");
+                        }
                     }
                 }
+
             } catch (const std::out_of_range& e) {
                 std::cerr << "Flag \"" << current << "\" unrecognized\n";
                 exit(-1);
@@ -64,8 +80,9 @@ std::unordered_map<std::string, std::string> parseArguments(int argc, char *argv
                 std::cerr << "Flag \"" << current << "\" needs an associated value\n";
                 exit(-1);
             }
+
         } else {
-            // It's not a flag, so ew add it to non-flags
+            // It's not a flag, so we add it to non-flags
             non_flags += current + " ";
         }
     }
@@ -253,6 +270,7 @@ int main(int argc, char *argv[]) {
             size_t length = imagePath.size();
             std::string jpeg = ".jpeg";
             std::string png = ".png";
+            std::string jpg = ".jpg";
             std::string mime_type = "image/png";
 
             // If the file is NEITHER jpeg nor png
