@@ -1,6 +1,6 @@
 /**
  * This is a script for the basic audio manipulations I find myself constantly doing. 
- * Specifically, setting the audtho
+ * Specifically, getting metadata. I'm trying to make this as useful for me as possible. 
  */
 #include <iostream>
 #include <unordered_map>
@@ -273,16 +273,21 @@ int main(int argc, char *argv[]) {
             std::string jpg = ".jpg";
             std::string mime_type = "image/png";
 
+            bool isJPEG = (imagePath.compare(length - 5, 5, jpeg) == 0);
+            bool isPNG = (imagePath.compare(length - 4, 4, png) == 0);
+            bool isJPG = (imagePath.compare(length - 3, 3, jpg) == 0);
+
             // If the file is NEITHER jpeg nor png
-            if (!((imagePath.compare(length - 5, 5, jpeg) == 0) || (imagePath.compare(length - 4, 4, png) == 0))) {
-                std::cerr << "Image file type is unsupported: must be jpeg or png\n";
+            if (!(isJPEG || isPNG || isJPG)) {
+                std::cerr << "Image file type is unsupported: must be jpeg (or jpg) or png\n";
                 exit(-1);
             }
 
-            // Is the file a jpeg
-            if (imagePath.compare(length - 6, 5, jpeg) == 0) {
+            // Is the file a jpeg (jpeg and jpg) the same
+            if (isJPEG || isJPG) {
                 mime_type = "image/jpeg";
             }
+
 
             if (containsKey(args, "verbose")) {
                 std::cout << "Setting album cover to: " << args.at("set-art") << "\n";
